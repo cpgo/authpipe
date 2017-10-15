@@ -12,7 +12,7 @@ stateless protocols, but also over long-running connections such as websockets.
 Finally, with its plugin-based approach to authentication, the details of
 how exactly an account is setup, verified, locked, removed, etc. can be
 placed where it belongs: next to the functions in the pipeline that use
-those mechanisms.i
+those mechanisms
 
 So, for instance, the SQL password checker requires the
 name of a users table and the id column in it, but will itself manage a
@@ -23,13 +23,15 @@ SQL to LDAP can be a simple matter of changing up your authentication pipeline.
 AuthPipe is heavily inspired by Plug, and as such uses a similar syntax for defining
 authentication pipelines. For example:
 
-    defmodule AuthDef do
-      use AuthPipe
+```elixir
+defmodule AuthDef do
+  use AuthPipe
 
-      auth_stage :session_token, required: false
-      auth_stage :password, implicit: true
-      auth_stage :captcha
-    end
+  auth_stage :session_token, required: false
+  auth_stage :password, implicit: true
+  auth_stage :captcha
+end
+```
 
 The above module defines an authentication pipeline that includes checking
 for session tokens, passwords, and captchas. By defalt all stages of a pipeline
@@ -49,7 +51,7 @@ session with an init data block that advertises what it is capable of supporting
       }
     }
 
-In the AuthDef exampleabove , session tokens are not required and password checking
+In the AuthDef example above , session tokens are not required and password checking
 is implied which means that the client does not need to advertise special support
 for it. Required modules which are not implicit and which the client does not 
 explictly say it supports will block authentication from proceeding.
@@ -59,12 +61,12 @@ they are declared in the authentication definition. So in the above example,
 tokens will be checked first, then passwords, and finally a captcha challenge
 will be generated.
 
-Each stage is expected to be implemented as a module with the name AuthPipe.Stage.<name>
+Each stage is expected to be implemented as a module with the name `AuthPipe.Stage.<name>`
 where the name is the snake case version of the atom (in the pipeline definition) or
 string (in the client init block). For example this;
-
-  auth_stage: :my_awesome_stage
-
+```elixir
+auth_stage: :my_awesome_stage
+```
 would require a module named `AuthPipe.Stage.MyAwesomeStage` to exist and
 be available in the application.
 
